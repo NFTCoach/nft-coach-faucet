@@ -1,5 +1,5 @@
 import { Wallet, Contract, providers, utils } from "ethers"
-import { COACHABI, NC1155ABI, TournamentABI } from "./abis"
+import { COACHABI, ManagementABI, NC1155ABI, TournamentABI } from "./abis"
 import addresses from "./addresses"
 import * as dotenv from "dotenv"
 
@@ -25,6 +25,7 @@ const getArgs = async (txn: any, event: any) => {
 const Tournament = new Contract(addresses.Tournaments, TournamentABI, signer)
 const Coach = new Contract(addresses.COACH, COACHABI, signer)
 const NC1155 = new Contract(addresses.NC1155, NC1155ABI, signer)
+const Management = new Contract(addresses.Management, ManagementABI, signer)
 
 const EXPLORER = "rinkeby.etherscan.io/tx/"
 const COACH_AMT = utils.parseEther("10000")
@@ -117,6 +118,33 @@ export const createTournament = async (details: any) => {
       address: "-",
       type: "TOURNAMENT ID : " + tournamentId.toString(),
       amt: CARD_AMT,
+      link: EXPLORER + txn.hash,
+    },
+  })
+  document.dispatchEvent(doneEvent)
+}
+
+export const createPlayer = async () => {
+  const seed = Math.floor(Math.random() * 10 ** 8)
+
+  const txn = await Management.connect(signer).testCreatePlayer(seed.toString())
+  const txnEvent = new CustomEvent("txnSent", {
+    detail: {
+      address: "-",
+      type: "CREATE PLAYER",
+      amt: "-",
+      link: EXPLORER + txn.hash,
+    },
+  })
+  document.dispatchEvent(txnEvent)
+
+  const playerId = (await getArgs(txn, "PlayerMinted"))[0]
+
+  const doneEvent = new CustomEvent("txnDone", {
+    detail: {
+      address: "-",
+      type: "PLAYER ID: " + playerId.toString(),
+      amt: "-",
       link: EXPLORER + txn.hash,
     },
   })

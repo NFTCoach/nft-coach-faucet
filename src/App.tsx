@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react"
 import "./App.css"
-import { mintCard, mintCoach, createTournament } from "./contracts/fns"
+import {
+  mintCard,
+  mintCoach,
+  createTournament,
+  createPlayer,
+} from "./contracts/fns"
 import { utils } from "ethers"
 
 const unk = (t: any) => t as unknown as any
@@ -54,6 +59,10 @@ function App() {
 
   const getCoach = async () => {
     await mintCoach(address)
+  }
+
+  const getPlayer = async () => {
+    await createPlayer()
   }
 
   const handleCreateTournament = async () => {
@@ -133,6 +142,11 @@ function App() {
       </div>
       <hr />
 
+      <div>
+        <button onClick={getPlayer}>Get Player</button>
+      </div>
+
+      <hr />
       <div>
         <button onClick={getPlayerPack}>Get Player Pack</button>
       </div>
@@ -258,12 +272,13 @@ const Notif = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const notif = props.notif
+  const notif: Request = props.notif
 
   return (
     <div>
       <h4>Txn {notif.done ? "Done" : "Sent"}</h4>
       <p>To: {notif.to}</p>
+      <p>Type: {notif.type}</p>
       <p>Amount: {notif.amt}</p>
       <a href={notif.link}>Details</a>
 
