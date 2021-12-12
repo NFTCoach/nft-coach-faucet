@@ -113,8 +113,12 @@ function App() {
   return (
     <div className="App">
       <h1>Coach Faucet</h1>
+
       <div>
+        <label htmlFor="addr">Address</label>
         <input
+          name="addr"
+          id="addr"
           placeholder="Enter address"
           type="text"
           value={address}
@@ -122,14 +126,18 @@ function App() {
         />
       </div>
 
+      <hr />
+
       <div>
         <button onClick={getCoach}>Get COACH</button>
       </div>
+      <hr />
 
       <div>
         <button onClick={getPlayerPack}>Get Player Pack</button>
       </div>
 
+      <hr />
       <div>
         <span>
           <label htmlFor="type">Card ID</label>
@@ -147,6 +155,8 @@ function App() {
         <button onClick={getCard}>Get Card</button>
       </div>
 
+      <hr />
+
       <div>
         <label htmlFor="matchc">Match Count</label>
         <input
@@ -158,6 +168,7 @@ function App() {
           name="matchc"
           id="matchc"
         />
+        <br />
 
         <label htmlFor="winnerp">Winner's percent on pool</label>
         <input
@@ -170,6 +181,7 @@ function App() {
           id="winnerp"
         />
 
+        <br />
         <label htmlFor="startd">Start delay in seconds</label>
         <input
           type="number"
@@ -181,6 +193,7 @@ function App() {
           name="startd"
         />
 
+        <br />
         <label htmlFor="intervald">Seconds between two matches</label>
         <input
           type="number"
@@ -192,6 +205,7 @@ function App() {
           name="intervald"
         />
 
+        <br />
         <label htmlFor="entranceFee">Entrance Fee</label>
         <input
           type="number"
@@ -202,7 +216,7 @@ function App() {
           id="entranceFee"
           name="entranceFee"
         />
-
+        <br />
         <label htmlFor="prepaidFee">Prepaid Fee</label>
         <input
           type="number"
@@ -213,6 +227,7 @@ function App() {
           id="prepaidFee"
           name="prepaidFee"
         />
+        <br />
 
         <button onClick={handleCreateTournament}>Create Tournament</button>
       </div>

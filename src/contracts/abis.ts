@@ -459,7 +459,6 @@ export const TournamentABI = [
     type: "function",
   },
 ]
-
 export const TrainingABI = [
   {
     inputs: [
@@ -613,7 +612,6 @@ export const TrainingABI = [
     type: "function",
   },
 ]
-
 export const MarketplaceABI = [
   {
     inputs: [
@@ -1082,7 +1080,6 @@ export const MarketplaceABI = [
     type: "function",
   },
 ]
-
 export const ManagementABI = [
   {
     inputs: [
@@ -1707,6 +1704,19 @@ export const ManagementABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "seed",
+        type: "uint256",
+      },
+    ],
+    name: "testCreatePlayer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "newOwner",
         type: "address",
@@ -1834,7 +1844,6 @@ export const ManagementABI = [
     type: "function",
   },
 ]
-
 export const NC721ABI = [
   {
     inputs: [],
@@ -2313,7 +2322,6 @@ export const NC721ABI = [
     type: "function",
   },
 ]
-
 export const NC1155ABI = [
   {
     inputs: [],
@@ -2826,7 +2834,6 @@ export const NC1155ABI = [
     type: "function",
   },
 ]
-
 export const COACHABI = [
   {
     inputs: [],
@@ -3205,7 +3212,6 @@ export const COACHABI = [
     type: "function",
   },
 ]
-
 export const RNGABI = [
   {
     inputs: [
