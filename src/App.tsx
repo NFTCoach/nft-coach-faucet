@@ -1,26 +1,267 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react"
+import "./App.css"
+import { mintCard, mintCoach, createTournament } from "./contracts/fns"
+import { utils } from "ethers"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const unk = (t: any) => t as unknown as any
+
+class Request {
+  done: boolean
+  to: string
+  type: string
+  amt: string
+  link: string
+
+  constructor(
+    done: boolean,
+    to: string,
+    type: string,
+    amt: string,
+    link: string
+  ) {
+    this.done = done
+    this.to = to
+    this.type = type
+    this.amt = amt
+    this.link = link
+  }
 }
 
-export default App;
+function App() {
+  const [address, setAddress] = useState<string>("")
+  const [cardType, setCardType] = useState<number>(0)
+
+  const [matchCount, setMatchCount] = useState<number>(0)
+  const [winnerPoolPercent, setWinnerPoolPercent] = useState<number>(0)
+  const [start, setStart] = useState<number>(0)
+  const [interval, setIntervalTime] = useState<number>(0)
+  const [entranceFee, setEntranceFee] = useState<number>(0)
+  const [prepaidFee, setPrepaidFee] = useState<number>(0)
+
+  const [notifQueue, setNotifQueue] = useState<Request[]>([])
+
+  function doStuff(x: string) {
+    console.log(x)
+  }
+
+  const getPlayerPack = async () => {
+    await mintCard(address, 10)
+  }
+
+  const getCard = async () => {
+    await mintCard(address, cardType)
+  }
+
+  const getCoach = async () => {
+    await mintCoach(address)
+  }
+
+  const handleCreateTournament = async () => {
+    await createTournament({
+      matchCount,
+      winnerPoolPercent,
+      start,
+      interval,
+      entranceFee,
+      prepaidFee,
+    })
+  }
+
+  const popQueue = () => {
+    console.log("popping queue")
+    setNotifQueue(notifQueue.slice(0, -1))
+  }
+
+  useEffect(() => {
+    document.addEventListener("txnSent", (e) => {
+      e.stopImmediatePropagation()
+      const details: any = unk(e).detail
+      setNotifQueue([
+        ...notifQueue,
+        new Request(
+          false,
+          details.address,
+          details.type,
+          details.amt.toString(),
+          details.link
+        ),
+      ])
+      doStuff("txnSent")
+      console.log("txnSent", e)
+    })
+
+    document.addEventListener("txnDone", (e) => {
+      e.stopImmediatePropagation()
+      const details: any = unk(e).detail
+      setNotifQueue([
+        ...notifQueue,
+        new Request(
+          true,
+          details.address,
+          details.type,
+          details.type === "COACH"
+            ? utils.formatEther(details.amt)
+            : details.amt.toString(),
+          details.link
+        ),
+      ])
+
+      doStuff("txnDone")
+    })
+  }, [setNotifQueue, notifQueue])
+
+  return (
+    <div className="App">
+      <h1>Coach Faucet</h1>
+      <div>
+        <input
+          placeholder="Enter address"
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <button onClick={getCoach}>Get COACH</button>
+      </div>
+
+      <div>
+        <button onClick={getPlayerPack}>Get Player Pack</button>
+      </div>
+
+      <div>
+        <span>
+          <label htmlFor="type">Card ID</label>
+          <input
+            type="number"
+            name="type"
+            min={0}
+            max={9}
+            step={1}
+            value={cardType}
+            onChange={(e) => setCardType(parseInt(e.target.value))}
+            id="type"
+          />
+        </span>
+        <button onClick={getCard}>Get Card</button>
+      </div>
+
+      <div>
+        <label htmlFor="matchc">Match Count</label>
+        <input
+          type="number"
+          value={matchCount}
+          onChange={(e) => {
+            setMatchCount(parseInt(e.target.value))
+          }}
+          name="matchc"
+          id="matchc"
+        />
+
+        <label htmlFor="winnerp">Winner's percent on pool</label>
+        <input
+          type="number"
+          value={winnerPoolPercent}
+          onChange={(e) => {
+            setWinnerPoolPercent(parseInt(e.target.value))
+          }}
+          name="winnerp"
+          id="winnerp"
+        />
+
+        <label htmlFor="startd">Start delay in seconds</label>
+        <input
+          type="number"
+          value={start}
+          onChange={(e) => {
+            setStart(parseInt(e.target.value))
+          }}
+          id="startd"
+          name="startd"
+        />
+
+        <label htmlFor="intervald">Seconds between two matches</label>
+        <input
+          type="number"
+          value={interval}
+          onChange={(e) => {
+            setIntervalTime(parseInt(e.target.value))
+          }}
+          id="intervald"
+          name="intervald"
+        />
+
+        <label htmlFor="entranceFee">Entrance Fee</label>
+        <input
+          type="number"
+          value={entranceFee}
+          onChange={(e) => {
+            setEntranceFee(parseInt(e.target.value))
+          }}
+          id="entranceFee"
+          name="entranceFee"
+        />
+
+        <label htmlFor="prepaidFee">Prepaid Fee</label>
+        <input
+          type="number"
+          value={prepaidFee}
+          onChange={(e) => {
+            setPrepaidFee(parseInt(e.target.value))
+          }}
+          id="prepaidFee"
+          name="prepaidFee"
+        />
+
+        <button onClick={handleCreateTournament}>Create Tournament</button>
+      </div>
+
+      {notifQueue.map((notif) => {
+        return <Notif eject={popQueue} notif={notif} />
+      })}
+    </div>
+  )
+}
+
+const Notif = (props: any) => {
+  const [progress, setProgress] = useState<number>(0)
+
+  useEffect(() => {
+    setTimeout(props.eject, 10000)
+  }, [props.eject])
+
+  useEffect(() => {
+    const invl = setInterval(() => {
+      if (progress >= 100) return
+      setProgress((p) => p + 5)
+    }, 500)
+
+    return () => {
+      clearInterval(invl)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const notif = props.notif
+
+  return (
+    <div>
+      <h4>Txn {notif.done ? "Done" : "Sent"}</h4>
+      <p>To: {notif.to}</p>
+      <p>Amount: {notif.amt}</p>
+      <a href={notif.link}>Details</a>
+
+      <div
+        style={{
+          marginTop: "20px",
+          backgroundColor: "black",
+          height: "5px",
+          width: progress / 2 + "%",
+        }}
+      ></div>
+    </div>
+  )
+}
+
+export default App
