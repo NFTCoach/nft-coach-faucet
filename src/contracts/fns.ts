@@ -28,13 +28,18 @@ const getArgs = async (txn: any, event: any) => {
   return receipt.events?.filter((x: any) => x.event === event)?.[0]?.args
 }
 
+const filterEvents = async (ctc: any, eventName: string, ...args: any[]) => {
+  const eventFilter = ctc.filters[eventName](...args)
+  return await ctc.queryFilter(eventFilter)
+}
+
 const Tournament = new Contract(addresses.Tournaments, TournamentABI, signer)
 const Coach = new Contract(addresses.COACH, COACHABI, signer)
 const NC1155 = new Contract(addresses.NC1155, NC1155ABI, signer)
 const NC721 = new Contract(addresses.NC721, NC721ABI, signer)
 const Management = new Contract(addresses.Management, ManagementABI, signer)
 
-const EXPLORER = "rinkeby.etherscan.io/tx/"
+const EXPLORER = "https://rinkeby.etherscan.io/tx/"
 const COACH_AMT = utils.parseEther("10000")
 const CARD_AMT = 5
 
@@ -158,4 +163,26 @@ export const createPlayer = async (to: string) => {
     },
   })
   document.dispatchEvent(doneEvent)
+}
+
+export const getTournaments = async () => {
+  const createEvents = await filterEvents(Tournament, "TournamentCreated")
+  const createdIds: string[] = createEvents.map((ev: any) =>
+    ev.args[0].toString()
+  )
+
+  const startEvents = await filterEvents(Tournament, "TournamentStarted")
+  const startedIds: string[] = startEvents.map((ev: any) =>
+    ev.args[0].toString()
+  )
+
+  return createdIds.reduce((p: any, v: string) => {
+    return [
+      ...p,
+      {
+        id: v,
+        started: !startedIds.includes(v),
+      },
+    ]
+  }, [])
 }

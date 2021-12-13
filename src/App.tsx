@@ -5,10 +5,20 @@ import {
   mintCoach,
   createTournament,
   createPlayer,
+  getTournaments,
 } from "./contracts/fns"
 import { utils } from "ethers"
 
 const unk = (t: any) => t as unknown as any
+
+class Tournament {
+  id: string
+  started: boolean
+  constructor(obj: any) {
+    this.id = obj.id
+    this.started = obj.started
+  }
+}
 
 class Request {
   done: boolean
@@ -35,6 +45,9 @@ class Request {
 function App() {
   const [address, setAddress] = useState<string>("")
   const [cardType, setCardType] = useState<number>(0)
+
+  const [updateTournaments, setUpdateTournaments] = useState<boolean>(false)
+  const [tournaments, setTournaments] = useState<Tournament[]>([])
 
   const [matchCount, setMatchCount] = useState<number>(0)
   const [winnerPoolPercent, setWinnerPoolPercent] = useState<number>(0)
@@ -78,15 +91,17 @@ function App() {
 
   const popQueue = () => {
     console.log("popping queue")
-    setNotifQueue(notifQueue.slice(0, -1))
+    const tmp = notifQueue
+    tmp.pop()
+    setNotifQueue(tmp)
   }
 
   useEffect(() => {
     document.addEventListener("txnSent", (e) => {
       e.stopImmediatePropagation()
       const details: any = unk(e).detail
-      setNotifQueue([
-        ...notifQueue,
+      setNotifQueue((prev) => [
+        ...prev,
         new Request(
           false,
           details.address,
@@ -118,6 +133,17 @@ function App() {
       doStuff("txnDone")
     })
   }, [setNotifQueue, notifQueue])
+
+  useEffect(() => {
+    if (!updateTournaments) return
+
+    getTournaments()
+      .then((tournaments) => tournaments.map((t) => new Tournament(t)))
+      .then((ts) => {
+        setTournaments(ts)
+        setUpdateTournaments(false)
+      })
+  }, [updateTournaments])
 
   return (
     <div className="App">
@@ -249,6 +275,19 @@ function App() {
       {notifQueue.map((notif) => {
         return <Notif eject={popQueue} notif={notif} key={notif.link} />
       })}
+
+      <hr />
+
+      <button
+        onClick={() => {
+          setUpdateTournaments(true)
+        }}
+      >
+        Refresh Tournaments
+      </button>
+      {tournaments.map((t) => (
+        <Trnm t={t} />
+      ))}
     </div>
   )
 }
@@ -290,6 +329,17 @@ const Notif = (props: any) => {
           width: progress / 2 + "%",
         }}
       ></div>
+    </div>
+  )
+}
+
+const Trnm = (props: { t: Tournament }) => {
+  const { t } = props
+
+  return (
+    <div>
+      <p>ID: {t.id}</p>
+      <p>{t.started ? "Started" : "Not Started"}</p>
     </div>
   )
 }
