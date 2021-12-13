@@ -592,6 +592,24 @@ export const TrainingABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "opponent",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "seed",
+        type: "uint256",
+      },
+    ],
+    name: "testTraining",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "train",
     outputs: [],
@@ -1243,6 +1261,11 @@ export const ManagementABI = [
         name: "user",
         type: "address",
       },
+      {
+        internalType: "bool",
+        name: "won",
+        type: "bool",
+      },
     ],
     name: "afterTraining",
     outputs: [],
@@ -1710,6 +1733,19 @@ export const ManagementABI = [
       },
     ],
     name: "testCreatePlayer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "seed",
+        type: "uint256",
+      },
+    ],
+    name: "testOpenPack",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

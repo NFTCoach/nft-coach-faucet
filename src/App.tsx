@@ -62,7 +62,7 @@ function App() {
   }
 
   const getPlayer = async () => {
-    await createPlayer()
+    await createPlayer(address)
   }
 
   const handleCreateTournament = async () => {
@@ -247,7 +247,7 @@ function App() {
       </div>
 
       {notifQueue.map((notif) => {
-        return <Notif eject={popQueue} notif={notif} />
+        return <Notif eject={popQueue} notif={notif} key={notif.link} />
       })}
     </div>
   )
