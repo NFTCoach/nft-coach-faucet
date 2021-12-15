@@ -201,6 +201,8 @@ function App() {
         <label htmlFor="matchc">Match Count</label>
         <input
           type="number"
+          min={1}
+          max={4}
           value={matchCount}
           onChange={(e) => {
             setMatchCount(parseInt(e.target.value))
