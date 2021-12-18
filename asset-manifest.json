@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/nft-coach-faucet/static/css/main.a617e044.chunk.css",
-    "main.js": "/nft-coach-faucet/static/js/main.fee80233.chunk.js",
-    "main.js.map": "/nft-coach-faucet/static/js/main.fee80233.chunk.js.map",
+    "main.js": "/nft-coach-faucet/static/js/main.419076cf.chunk.js",
+    "main.js.map": "/nft-coach-faucet/static/js/main.419076cf.chunk.js.map",
     "runtime-main.js": "/nft-coach-faucet/static/js/runtime-main.e9b5a0bb.js",
     "runtime-main.js.map": "/nft-coach-faucet/static/js/runtime-main.e9b5a0bb.js.map",
-    "static/js/2.0b59fea8.chunk.js": "/nft-coach-faucet/static/js/2.0b59fea8.chunk.js",
-    "static/js/2.0b59fea8.chunk.js.map": "/nft-coach-faucet/static/js/2.0b59fea8.chunk.js.map",
+    "static/js/2.b7c3dd67.chunk.js": "/nft-coach-faucet/static/js/2.b7c3dd67.chunk.js",
+    "static/js/2.b7c3dd67.chunk.js.map": "/nft-coach-faucet/static/js/2.b7c3dd67.chunk.js.map",
     "static/js/3.d7b7fd67.chunk.js": "/nft-coach-faucet/static/js/3.d7b7fd67.chunk.js",
     "static/js/3.d7b7fd67.chunk.js.map": "/nft-coach-faucet/static/js/3.d7b7fd67.chunk.js.map",
     "index.html": "/nft-coach-faucet/index.html",
     "static/css/main.a617e044.chunk.css.map": "/nft-coach-faucet/static/css/main.a617e044.chunk.css.map",
-    "static/js/2.0b59fea8.chunk.js.LICENSE.txt": "/nft-coach-faucet/static/js/2.0b59fea8.chunk.js.LICENSE.txt"
+    "static/js/2.b7c3dd67.chunk.js.LICENSE.txt": "/nft-coach-faucet/static/js/2.b7c3dd67.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.e9b5a0bb.js",
-    "static/js/2.0b59fea8.chunk.js",
+    "static/js/2.b7c3dd67.chunk.js",
     "static/css/main.a617e044.chunk.css",
-    "static/js/main.fee80233.chunk.js"
+    "static/js/main.419076cf.chunk.js"
   ]
 }
